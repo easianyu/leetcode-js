@@ -68,9 +68,27 @@ days = 4;
 // console.log(2 + Math.floor((5 - 2) / 2));
 // console.log(5 - Math.floor((5 - 2) / 2));
 
-const str = 'yyxeasi an';
+const arr = [
+  'HTML',
+  'CSS',
+  'JavaScript ES6',
+  'TypeScript',
+  'C++',
+  'Java',
+  'C#',
+  'Python',
+  'React',
+  'React-Redux',
+  'Redux-Saga',
+  'Next JS',
+  'Axios',
+  'Sass',
+  'React Native',
+  'GraphQL',
+  'MySQL',
+  'GitHub',
+  'Linux',
+  'Shell',
+];
 
-const ar = str.split('');
-ar[2] = '#';
-const res = ar.join('');
-console.log(res);
+console.log(arr.toString());
