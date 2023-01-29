@@ -106,3 +106,79 @@ class Heap {
     [this.array[i1], this.array[i2]] = [this.array[i2], this.array[i1]];
   }
 }
+
+/**
+ * @param {number} n
+ * @param {number[][]} edges
+ * @return {number}
+ */
+var countRestrictedPaths = function (n, edges) {
+  const M = 1e9 + 7;
+  const graph = Array.from(Array(n), () => []);
+  for (const [from, to, weight] of edges) {
+    graph[from - 1].push([to - 1, weight]);
+    graph[to - 1].push([from - 1, weight]);
+  }
+
+  const minHeap = new Heap((a, b) => a[1] - b[1]); // [node, totalWeight]
+  const visited = Array(n).fill(0);
+  const dist = Array(n).fill(Number.MAX_SAFE_INTEGER);
+  minHeap.push([n - 1, 0]);
+  while (!minHeap.empty()) {
+    const [curMinNode, totalWeight] = minHeap.pop();
+    if (visited[curMinNode]) continue;
+    visited[curMinNode] = 1;
+    dist[curMinNode] = totalWeight;
+
+    for (const [nextNode, weight] of graph[curMinNode]) {
+      if (visited[nextNode]) continue;
+      minHeap.push([nextNode, weight + totalWeight]);
+    }
+  }
+
+  const cache = Array(n).fill(-1);
+  function dfs(node) {
+    if (node === n - 1) return 1;
+    if (cache[node] !== -1) return cache[node];
+
+    let count = 0;
+    for (const [nextNode, _] of graph[node]) {
+      if (dist[nextNode] >= dist[node]) continue;
+      count = (count + dfs(nextNode)) % M;
+    }
+
+    cache[node] = count;
+
+    return count;
+  }
+
+  let res = dfs(0);
+  // console.log(res);
+
+  return res;
+};
+
+n = 5;
+edges = [
+  [1, 2, 3],
+  [1, 3, 3],
+  [2, 3, 1],
+  [1, 4, 2],
+  [5, 2, 2],
+  [3, 5, 1],
+  [5, 4, 10],
+];
+countRestrictedPaths(n, edges);
+
+n = 7;
+edges = [
+  [1, 3, 1],
+  [4, 1, 2],
+  [7, 3, 4],
+  [2, 5, 3],
+  [5, 6, 1],
+  [6, 7, 2],
+  [7, 5, 3],
+  [2, 6, 4],
+];
+countRestrictedPaths(n, edges);
